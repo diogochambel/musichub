@@ -1,0 +1,75 @@
+<section class="list-detail-page">
+  <div class="list-detail-header">
+    <div>
+      <h1>{{ listName() }}</h1>
+      <p>View and manage the albums in this custom list.</p>
+    </div>
+  </div>
+
+  @if (success()) {
+    <div class="message success">{{ success() }}</div>
+  }
+
+  @if (error()) {
+    <div class="message error">{{ error() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="state-box">Loading list...</div>
+  } @else if (items().length === 0) {
+    <div class="state-box">This list has no albums yet.</div>
+  } @else {
+    <div class="sort-bar">
+      <span class="sort-label">Sort by:</span>
+
+      <button
+        class="sort-btn"
+        [class.active]="sortField() === 'album_title'"
+        (click)="setSort('album_title')"
+      >
+        Album {{ sortIcon('album_title') }}
+      </button>
+
+      <button
+        class="sort-btn"
+        [class.active]="sortField() === 'added_at'"
+        (click)="setSort('added_at')"
+      >
+        Added at {{ sortIcon('added_at') }}
+      </button>
+    </div>
+
+    <div class="items-list">
+      @for (item of sortedItems(); track item.album_id) {
+        <article
+          class="item-card clickable"
+          [routerLink]="['/albums', item.album_id]"
+        >
+          @if (item.album_cover) {
+            <img [src]="item.album_cover" [alt]="albumTitle(item)" />
+          }
+
+          <div class="item-info">
+            <span class="album-title">
+              {{ albumTitle(item) }}
+            </span>
+
+            @if (item.artist_name) {
+              <p>{{ item.artist_name }}</p>
+            }
+
+            <small>Added on {{ formatDate(item.added_at) }}</small>
+          </div>
+
+          <button
+            class="btn-remove-icon"
+            (click)="removeAlbum(item); $event.stopPropagation()"
+            aria-label="Remove"
+          >
+            &times;
+          </button>
+        </article>
+      }
+    </div>
+  }
+</section>

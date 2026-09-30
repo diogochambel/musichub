@@ -1,0 +1,168 @@
+<div class="container">
+  @if (album) {
+    <div class="album-header">
+      @if (album.image_url) {
+        <img
+          [src]="album.image_url"
+          class="album-cover-large"
+          alt="{{ album.title }} cover"
+        />
+      } @else {
+        <div class="album-cover-large"></div>
+      }
+
+      <div class="album-info">
+        <span class="badge">{{ typeLabel(album.type) }}</span>
+
+        <h1>{{ album.title }}</h1>
+
+        @if (album.artist_name) {
+          <p class="artist-link">
+            by
+            <a [routerLink]="['/artists', album.artist_id]" class="link">
+              {{ album.artist_name }}
+            </a>
+          </p>
+        } @else {
+          <p class="artist-link">Various Artists</p>
+        }
+
+        <p class="meta">
+          {{ album.release_year }} &bull; MBID: {{ album.mbid }}
+        </p>
+
+        @if (auth.isLoggedIn()) {
+          <div class="album-actions">
+            <button type="button" (click)="openListPicker()">
+              + Add to List
+            </button>
+          </div>
+
+          @if (listSuccessMessage()) {
+            <p class="inline-message success">{{ listSuccessMessage() }}</p>
+          }
+
+          @if (listErrorMessage()) {
+            <p class="inline-message error">{{ listErrorMessage() }}</p>
+          }
+
+          @if (showListPicker()) {
+            <div class="modal-backdrop" (click)="closeListPicker()">
+              <div class="modal-card" (click)="$event.stopPropagation()">
+                <h3>Add to list</h3>
+
+                @if (lists().length > 0) {
+                  <select
+                    [value]="selectedListId()"
+                    (change)="onSelectedListChange($event)"
+                  >
+                    @for (list of lists(); track list.id) {
+                      <option [value]="list.id">{{ list.name }}</option>
+                    }
+                  </select>
+
+                  <div class="modal-actions">
+                    <button
+                      type="button"
+                      class="btn-secondary"
+                      (click)="closeListPicker()"
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="button"
+                      class="btn-primary"
+                      (click)="addAlbumToList()"
+                      [disabled]="addingToList()"
+                    >
+                      @if (addingToList()) {
+                        Adding...
+                      } @else {
+                        Confirm
+                      }
+                    </button>
+                  </div>
+                } @else {
+                  <p>You do not have any custom lists yet.</p>
+                  <a routerLink="/lists" class="link">Create a list</a>
+                }
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+
+    @if (album.tracks && album.tracks.length > 0) {
+      <section class="tracks-section">
+        <h2>Tracklist</h2>
+
+        <div class="track-list">
+          @for (track of album.tracks; track track.song_id) {
+            <a [routerLink]="['/songs', track.song_id]" class="track-item">
+              <span class="track-number">{{ track.track_number }}</span>
+
+              <div class="track-info">
+                <span class="track-title">{{ track.title || 'Unknown' }}</span>
+
+                @if (track.duration_seconds) {
+                  <span class="track-duration">
+                    {{ formatDuration(track.duration_seconds) }}
+                  </span>
+                }
+              </div>
+            </a>
+          }
+        </div>
+      </section>
+    }
+
+    @if (successMessage()) {
+      <div class="success-message">{{ successMessage() }}</div>
+    }
+
+    @if (album.releases && album.releases.length > 0) {
+      <section class="releases-section">
+        <h2>Releases</h2>
+
+        <div class="releases-table">
+          @for (release of album.releases; track release.ean13) {
+            <div class="release-row">
+              <span class="release-support">{{ supportLabel(release.support) }}</span>
+
+              @if (hasMultipleVersionsForSupport(release.support)) {
+                <span class="release-version">{{ release.version_name }}</span>
+              }
+
+              <span class="release-ean">{{ release.ean13 }}</span>
+
+              @if (auth.isLoggedIn()) {
+                <button
+                  class="add-collection-btn"
+                  (click)="addToCollection(release)"
+                  [disabled]="
+                    userCollectionEans().has(release.ean13) ||
+                    addingEan() === release.ean13
+                  "
+                >
+                  @if (addedEan() === release.ean13) {
+                    ✓ Added
+                  } @else if (addingEan() === release.ean13) {
+                    Adding...
+                  } @else if (userCollectionEans().has(release.ean13)) {
+                    In Collection
+                  } @else {
+                    + Add
+                  }
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </section>
+    }
+  } @else {
+    <p class="loading">Loading album...</p>
+  }
+</div>

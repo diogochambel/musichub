@@ -1,0 +1,109 @@
+<div class="container">
+  <h1>System Health Monitor</h1>
+  <p class="subtitle">Go Backend + Angular Frontend + MongoDB</p>
+
+  <div class="health-cards">
+    <div class="card">
+      <h2>Backend Status</h2>
+      <div class="status-indicator" [ngClass]="getStatusClass(backendStatus)">
+        <span class="status-dot"></span>
+        <span class="status-text">{{ backendMessage }}</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Database Status</h2>
+      <div class="status-indicator" [ngClass]="getStatusClass(dbStatus)">
+        <span class="status-dot"></span>
+        <span class="status-text">{{ dbMessage }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="info">
+    <p>Auto-refreshing every 10 seconds</p>
+
+    <div class="endpoints">
+      <h3>Backend — Public Endpoints</h3>
+      <ul>
+        <li><code>GET /health</code> - Backend health check</li>
+        <li><code>GET /health/db</code> - Database connection check</li>
+        <li><code>POST /api/auth/login</code> - Authenticate user</li>
+        <li><code>POST /api/auth/register</code> - Register new user</li>
+        <li><code>GET /api/albums/featured</code> - Featured albums</li>
+        <li><code>GET /api/artists/featured</code> - Featured artists</li>
+        <li><code>GET /api/albums/recent</code> - Recent releases</li>
+        <li><code>GET /api/artists/&#123;id&#125;</code> - Artist details</li>
+        <li><code>GET /api/artists/search</code> - Search artists by name</li>
+        <li><code>GET /api/albums/&#123;id&#125;</code> - Album details</li>
+        <li><code>GET /api/songs/&#123;id&#125;</code> - Song details</li>
+        <li><code>GET /api/albums/search?q=&#123;query&#125;</code> - Search albums by title</li>
+        <li><code>POST /api/requests/&#123;id&#125;/respond</code> - Respond to request (admin)</li>
+      </ul>
+
+      <h3 class="auth-heading">Backend — Authenticated Endpoints <span class="lock-icon">&#128274;</span></h3>
+      <ul>
+        <li class="auth-required"><code>GET /users</code> - List all users</li>
+        <li class="auth-required"><code>POST /users</code> - Create user</li>
+        <li class="auth-required"><code>GET /users/&#123;id&#125;</code> - Get user by ID</li>
+        <li class="auth-required"><code>PUT /users/&#123;id&#125;</code> - Update user</li>
+        <li class="auth-required"><code>DELETE /users/&#123;id&#125;</code> - Delete user</li>
+        <li class="auth-required">
+          <code>PUT /users/&#123;id&#125;/favorite-artist</code> - Set favorite artist
+        </li>
+        <li class="auth-required">
+          <code>DELETE /users/&#123;id&#125;/favorite-artist</code> - Remove favorite artist
+        </li>
+        <li class="auth-required"><code>GET /api/collections</code> - List user's collection</li>
+        <li class="auth-required">
+          <code>POST /api/collections</code> - Add album version to collection
+        </li>
+        <li class="auth-required">
+          <code>DELETE /api/collections/&#123;id&#125;</code> - Remove from collection
+        </li>
+        <li class="auth-required"><code>GET /api/requests</code> - List version requests</li>
+        <li class="auth-required"><code>POST /api/requests</code> - Submit version request</li>
+        <li class="auth-required"><code>GET /api/notifications</code> - List notifications</li>
+        <li class="auth-required">
+          <code>GET /api/notifications/unread-count</code> - Count unread notifications
+        </li>
+        <li class="auth-required">
+          <code>POST /api/notifications/mark-all-read</code> - Mark all notifications as read
+        </li>
+        <li class="auth-required">
+          <code>POST /api/notifications/&#123;id&#125;/read</code> - Mark single notification as
+          read
+        </li>
+        <li class="auth-required"><code>GET /api/lists</code> - List user's custom lists</li>
+        <li class="auth-required"><code>POST /api/lists</code> - Create a custom list</li>
+        <li class="auth-required"><code>DELETE /api/lists/&#123;id&#125;</code> - Delete a custom list</li>
+        <li class="auth-required"><code>GET /api/lists/&#123;id&#125;/items</code> - View list contents</li>
+        <li class="auth-required"><code>POST /api/lists/&#123;id&#125;/items</code> - Add album to list</li>
+        <li class="auth-required"><code>DELETE /api/lists/&#123;id&#125;/items/&#123;albumId&#125;</code> - Remove album from list</li>
+      </ul>
+
+      <h3>Frontend — Public Routes</h3>
+      <ul>
+        <li><code>/</code> - Home page (hero + featured albums/artists/releases)</li>
+        <li><code>/health</code> - System health monitor (this page)</li>
+        <li><code>/login</code> - Login form</li>
+        <li><code>/register</code> - Registration form</li>
+        <li><code>/artists/&#123;id&#125;</code> - Artist details</li>
+        <li><code>/artists/&#123;id&#125;/albums</code> - Artist albums</li>
+        <li><code>/albums/&#123;id&#125;</code> - Album details</li>
+        <li><code>/songs/&#123;id&#125;</code> - Song details</li>
+      </ul>
+
+      <h3 class="auth-heading">Frontend — Protected Routes <span class="lock-icon">&#128274;</span></h3>
+      <ul>
+        <li class="auth-required"><code>/profile</code> - My Profile</li>
+        <li class="auth-required"><code>/dashboard</code> - Dashboard (search + quick access)</li>
+        <li class="auth-required"><code>/collection</code> - My Collection</li>
+        <li class="auth-required"><code>/lists</code> - My Lists</li>
+        <li class="auth-required"><code>/lists/&#123;id&#125;</code> - List detail</li>
+        <li class="auth-required"><code>/requests</code> - My Version Requests</li>
+        <li class="auth-required"><code>/notifications</code> - My Notifications</li>
+      </ul>
+    </div>
+  </div>
+</div>

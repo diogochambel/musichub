@@ -1,0 +1,143 @@
+<div class="requests-container">
+  <div class="requests-header">
+    <h2>My Version Requests</h2>
+    <button class="btn btn-primary" (click)="toggleForm()">
+      {{ showForm ? 'Cancel' : '+ New Request' }}
+    </button>
+  </div>
+
+  @if (showForm) {
+    <div class="request-form">
+      <h3>Request a New Album Version</h3>
+
+      @if (formError) {
+        <div class="error-message">{{ formError }}</div>
+      }
+      @if (formSuccess) {
+        <div class="success-message">{{ formSuccess }}</div>
+      }
+
+      <div class="form-group autocomplete-group">
+        <label>Album <span class="required">*</span></label>
+        @if (selectedAlbumLabel) {
+          <div class="selected-album">
+            <span>{{ selectedAlbumLabel }}</span>
+            <button type="button" class="btn-clear" (click)="clearAlbumSelection()" title="Clear selection">&times;</button>
+          </div>
+        } @else {
+          <input
+            type="text"
+            [(ngModel)]="albumQuery"
+            (ngModelChange)="onAlbumSearch()"
+            placeholder="Search albums by title..."
+            autocomplete="off"
+          />
+          @if (searchingAlbums) {
+            <div class="autocomplete-loading">Searching...</div>
+          }
+          @if (albumSuggestions.length > 0) {
+            <ul class="autocomplete-list">
+              @for (album of albumSuggestions; track album.id) {
+                <li (click)="selectAlbum(album)">
+                  <span class="suggestion-title">{{ album.title }}</span>
+                  @if (album.artist_name) {
+                    <span class="suggestion-artist"> — {{ album.artist_name }}</span>
+                  }
+                </li>
+              }
+            </ul>
+          }
+          @if (!searchingAlbums && albumQuery.trim().length > 0 && albumSuggestions.length === 0) {
+            <div class="autocomplete-empty">No albums found</div>
+          }
+        }
+      </div>
+
+      <div class="form-group">
+        <label>EAN-13 <span class="required">*</span></label>
+        <input type="text" [(ngModel)]="formEan13" placeholder="13 digit barcode" maxlength="13" />
+      </div>
+
+      <div class="form-group">
+        <label>Support <span class="required">*</span></label>
+        <select [(ngModel)]="formSupport">
+          <option value="CD">CD</option>
+          <option value="vinyl">Vinyl</option>
+          <option value="cassette">Cassette</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Version Name <span class="optional">(optional)</span></label>
+        <input
+          type="text"
+          [(ngModel)]="formVersionName"
+          placeholder="e.g. Red Edition, Deluxe..."
+        />
+      </div>
+
+      <div class="form-buttons">
+        <button class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
+          {{ submitting ? 'Submitting...' : 'Submit Request' }}
+        </button>
+      </div>
+    </div>
+  }
+
+  <div class="filter-bar">
+    <label>Filter by status:</label>
+    <select [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
+      <option value="">All</option>
+      <option value="em análise">Pending</option>
+      <option value="aceite">Accepted</option>
+      <option value="recusado">Rejected</option>
+    </select>
+  </div>
+
+  @if (loadingRequests) {
+    <div class="loading">Loading requests...</div>
+  }
+
+  @if (requestsError) {
+    <div class="error-message">{{ requestsError }}</div>
+  }
+
+  @if (!loadingRequests && requests.length === 0) {
+    <div class="empty-state">
+      <p>You have no requests yet. Click "+ New Request" to submit one.</p>
+    </div>
+  }
+
+  @if (!loadingRequests && requests.length > 0) {
+    <div class="requests-list">
+      @for (req of requests; track req.id) {
+        <div class="request-card">
+          <div class="request-info">
+            <div class="request-id">
+              <span class="label">Request ID:</span>
+              <span class="value mono">{{ req.id }}</span>
+            </div>
+            <div class="request-album">
+              <span class="label">Album:</span>
+              <span class="value">{{ req.album_title }}</span>
+            </div>
+            <div class="request-details">
+              <span>{{ req.support }}</span>
+              @if (req.version_name) {
+                <span> · {{ req.version_name }}</span>
+              }
+              <span> · EAN: {{ req.ean13 }}</span>
+            </div>
+            <div class="request-date">Submitted on {{ formatDate(req.requested_at) }}</div>
+          </div>
+
+          <div class="request-status">
+            <span class="status-badge" [class]="getStatusClass(req.status)">
+              {{ statusLabel(req.status) }}
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,76 @@
+<div class="container">
+  <h1>My Collection</h1>
+
+  @if (items.length === 0) {
+    <div class="collection-card">
+      <p class="empty">Your collection is empty.</p>
+    </div>
+  } @else {
+    <div class="collection-card collection-table-card">
+      <div class="collection-table-wrapper">
+        <table class="collection-table">
+        <thead>
+          <tr>
+            <th (click)="sortBy('album_title')" class="sortable">
+              Album{{ sortIndicator('album_title') }}
+            </th>
+            <th (click)="sortBy('release_year')" class="sortable">
+              Year{{ sortIndicator('release_year') }}
+            </th>
+            <th (click)="sortBy('artist_name')" class="sortable">
+              Artist{{ sortIndicator('artist_name') }}
+            </th>
+            <th (click)="sortBy('ean_13')" class="sortable">EAN-13{{ sortIndicator('ean_13') }}</th>
+            <th (click)="sortBy('support')" class="sortable">
+              Support{{ sortIndicator('support') }}
+            </th>
+            <th (click)="sortBy('version_name')" class="sortable">
+              Version Name{{ sortIndicator('version_name') }}
+            </th>
+            <th (click)="sortBy('added_at')" class="sortable">
+              Added on{{ sortIndicator('added_at') }}
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of sortedItems; track item.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/albums', item.album_id]">{{ item.album_title }}</a>
+              </td>
+              <td>{{ item.release_year }}</td>
+              <td>{{ item.artist_name || '—' }}</td>
+              <td>{{ item.ean_13 }}</td>
+              <td>{{ supportLabel(item.support) }}</td>
+              <td>{{ item.version_name || '—' }}</td>
+              <td>{{ formatDate(item.added_at) }}</td>
+              <td>
+                <button class="btn-remove-icon" (click)="remove(item.id)" aria-label="Remove">&times;</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+    <div class="collection-cards">
+      @for (item of sortedItems; track item.id) {
+        <div class="collection-item-card">
+          <div class="item-card-header">
+            <a [routerLink]="['/albums', item.album_id]" class="item-card-title">{{ item.album_title }}</a>
+            <button class="btn-remove-icon" (click)="remove(item.id)" aria-label="Remove">&times;</button>
+          </div>
+          <div class="item-card-details">
+            @if (item.artist_name) {
+              <span class="item-card-artist">{{ item.artist_name }}</span>
+            }
+            <span class="item-card-meta">{{ item.release_year }} &middot; {{ supportLabel(item.support) }}</span>
+            <span class="item-card-added">Added: {{ formatDate(item.added_at) }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

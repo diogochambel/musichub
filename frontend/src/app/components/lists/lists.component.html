@@ -1,0 +1,121 @@
+<div class="lists-container">
+  <div class="lists-header">
+    <h2>My Lists</h2>
+
+    <button class="btn btn-primary" (click)="toggleForm()">
+      {{ showForm() ? 'Cancel' : '+ New List' }}
+    </button>
+  </div>
+
+  @if (showForm()) {
+    <div class="list-form">
+      <h3>Create a New List</h3>
+
+      @if (formError) {
+        <div class="error-message">{{ formError }}</div>
+      }
+
+      @if (formSuccess) {
+        <div class="success-message">{{ formSuccess }}</div>
+      }
+
+      <div class="form-group">
+        <label>
+          List Name
+          <span class="required">*</span>
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="formName"
+          placeholder="e.g. Road Trip Mix"
+          maxlength="100"
+        />
+
+        <small>{{ formName.length }}/100</small>
+      </div>
+
+      <div class="form-buttons">
+        <button class="btn btn-primary" (click)="onSubmit()" [disabled]="submitting">
+          {{ submitting ? 'Creating...' : 'Create List' }}
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="loading">
+      Loading lists...
+    </div>
+  }
+
+  @if (listsError()) {
+    <div class="error-message">{{ listsError() }}</div>
+  }
+
+  @if (!loading() && lists().length === 0) {
+    <div class="empty-state">
+      <p>
+        You haven't created any lists yet.
+        Click "+ New List" to create one.
+      </p>
+    </div>
+  }
+
+  @if (!loading() && lists().length > 0) {
+    <div class="sort-bar">
+      <span class="sort-label">Sort by:</span>
+
+      <button
+        class="sort-btn"
+        [class.active]="sortField() === 'name'"
+        (click)="setSort('name')"
+      >
+        Name {{ sortIcon('name') }}
+      </button>
+
+      <button
+        class="sort-btn"
+        [class.active]="sortField() === 'album_count'"
+        (click)="setSort('album_count')"
+      >
+        Albums {{ sortIcon('album_count') }}
+      </button>
+
+      <button
+        class="sort-btn"
+        [class.active]="sortField() === 'updated_at'"
+        (click)="setSort('updated_at')"
+      >
+        Last Updated {{ sortIcon('updated_at') }}
+      </button>
+    </div>
+
+    <div class="lists-grid">
+      @for (list of sortedLists(); track list.id) {
+        <div class="list-card">
+          <a [routerLink]="['/lists', list.id]" class="list-card-link">
+            <div class="list-info">
+              <div class="list-name">{{ list.name }}</div>
+
+              <div class="list-meta">
+                <span>
+                  {{ list.album_count }}
+                  album{{ list.album_count === 1 ? '' : 's' }}
+                </span>
+
+                <span>
+                  · Updated {{ formatDate(list.updated_at) }}
+                </span>
+              </div>
+            </div>
+          </a>
+
+          <div class="list-actions">
+            <button class="btn-remove-icon" (click)="onDelete(list)" aria-label="Delete list">&times;</button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

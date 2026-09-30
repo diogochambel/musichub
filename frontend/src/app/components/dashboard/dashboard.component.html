@@ -1,0 +1,82 @@
+<div class="container">
+  <header class="hero">
+    <p class="welcome-message">Welcome, {{ getWelcomeName() }}</p>
+    <p class="subtitle">Your personal music hub</p>
+  </header>
+
+  <section class="search-section">
+    <div class="search-bar">
+      <select [(ngModel)]="searchMode" class="search-mode-select" (change)="onSearchModeChange()">
+        <option value="artists">Artists</option>
+        <option value="albums">Albums</option>
+      </select>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
+        placeholder="Search..."
+        class="search-input"
+      />
+      <button class="btn btn-search" (click)="onSearch()">Search</button>
+      @if (searchPerformed) {
+        <button class="btn btn-clear" (click)="clearSearch()">Clear</button>
+      }
+    </div>
+
+    @if (searchPerformed) {
+      <div class="search-results">
+        @if (searchResults && searchResults.length > 0) {
+          <h2>Results</h2>
+          @if (searchMode === 'artists') {
+            <div class="artists-grid">
+              @for (artist of searchResults; track artist.id) {
+                <a [routerLink]="['/artists', artist.id]" class="artist-card">
+                  <div class="placeholder-avatar"></div>
+                  <h3>{{ artist.name }}</h3>
+                  <p>{{ artistTypeLabel(artist.type) }}</p>
+                </a>
+              }
+            </div>
+          } @else {
+            <div class="music-grid">
+              @for (album of searchResults; track album.id) {
+                <a [routerLink]="['/albums', album.id]" class="music-card">
+                  @if (album.image_url) {
+                    <img [src]="album.image_url" class="placeholder-image" alt="{{ album.title }} cover" />
+                  } @else {
+                    <div class="placeholder-image"></div>
+                  }
+                  <h3>{{ album.title }}</h3>
+                  <p>{{ album.artist_name || 'Various Artists' }} &bull; {{ album.release_year }}</p>
+                </a>
+              }
+            </div>
+          }
+        } @else {
+          <p class="no-results">No results found.</p>
+        }
+      </div>
+    }
+  </section>
+
+  <section class="quick-access">
+    <h2>My Dashboard</h2>
+    <div class="dashboard-links">
+      <a routerLink="/collection" class="dashboard-card">
+        <span class="dashboard-icon">💿</span>
+        <span class="dashboard-label">My Collection</span>
+        <span class="dashboard-desc">View and manage your album collection</span>
+      </a>
+      <a routerLink="/requests" class="dashboard-card">
+        <span class="dashboard-icon">📋</span>
+        <span class="dashboard-label">My Version Requests</span>
+        <span class="dashboard-desc">Submit and track your album version requests</span>
+      </a>
+      <a routerLink="/lists" class="dashboard-card">
+        <span class="dashboard-icon">📝</span>
+        <span class="dashboard-label">My Lists</span>
+        <span class="dashboard-desc">View and manage your custom lists</span>
+      </a>
+    </div>
+  </section>
+</div>

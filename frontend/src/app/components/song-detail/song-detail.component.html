@@ -1,0 +1,43 @@
+<div class="container">
+  @if (song) {
+    <div class="song-header">
+      <div class="song-icon">&#9835;</div>
+      <div class="song-info">
+        <h1>{{ song.title }}</h1>
+        <p class="meta">
+          <span class="duration">{{ formatDuration(song.duration_seconds) }}</span>
+          &bull;
+          <span class="isrc">ISRC: {{ song.isrc }}</span>
+        </p>
+        @if (song.artists && song.artists.length > 0) {
+          <div class="artists-list">
+            @for (artist of song.artists; track artist.id) {
+              <a [routerLink]="['/artists', artist.id]" class="artist-tag">{{ artist.name }}</a>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (song.albums && song.albums.length > 0) {
+      <section class="albums-section">
+        <h2>Appears on</h2>
+        <div class="albums-grid">
+          @for (album of song.albums; track album.id) {
+            <a [routerLink]="['/albums', album.id]" class="album-card">
+              @if (album.image_url) {
+                <img [src]="album.image_url" class="album-cover" alt="{{ album.title }} cover" />
+              } @else {
+                <div class="album-cover"></div>
+              }
+              <h3>{{ album.title }}</h3>
+              <p>{{ album.release_year }}</p>
+            </a>
+          }
+        </div>
+      </section>
+    }
+  } @else {
+    <p class="loading">Loading song...</p>
+  }
+</div>

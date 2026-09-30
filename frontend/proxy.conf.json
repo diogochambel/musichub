@@ -1,0 +1,17 @@
+{
+  "/api": {
+    "target": "",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/users": {
+    "target": "",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/health": {
+    "target": "",
+    "secure": false,
+    "changeOrigin": true
+  }
+}

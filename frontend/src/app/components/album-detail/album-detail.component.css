@@ -1,0 +1,369 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: var(--bg-page);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.album-header {
+  display: flex;
+  gap: 30px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  margin-bottom: 40px;
+}
+
+.album-cover-large {
+  width: 200px;
+  height: 200px;
+  background: var(--placeholder-bg);
+  border-radius: 12px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.album-info {
+  flex: 1;
+}
+
+.album-info h1 {
+  margin: 10px 0 5px;
+  color: var(--text-primary);
+  font-size: 2rem;
+}
+
+.badge,
+.release-support,
+.add-collection-btn,
+.album-actions button,
+.btn-primary {
+  background: var(--accent-gradient);
+  color: white;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.artist-link {
+  color: var(--text-secondary);
+  margin: 5px 0;
+  font-size: 1.1rem;
+}
+
+.link {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.meta {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+.album-actions {
+  margin-top: 1.5rem;
+}
+
+.album-actions button {
+  border: none;
+  border-radius: 12px;
+  padding: 0.8rem 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.album-actions button:hover:not(:disabled),
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.album-actions button:disabled,
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.inline-message {
+  margin: 0.7rem 0 0;
+  font-weight: 700;
+}
+
+.inline-message.success {
+  color: var(--success-text, #16a34a);
+}
+
+.inline-message.error {
+  color: #dc2626;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.modal-card h3 {
+  margin: 0 0 1rem;
+  color: var(--text-primary);
+}
+
+.modal-card p {
+  color: var(--text-secondary);
+}
+
+.modal-card select {
+  width: 100%;
+  padding: 0.8rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-weight: 600;
+  outline: none;
+}
+
+.modal-card select:focus {
+  border-color: var(--accent-primary);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.btn-primary,
+.btn-secondary {
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn-primary {
+  border: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card-hover);
+}
+
+h2 {
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  margin: 0 0 20px 0;
+}
+
+.tracks-section {
+  margin-bottom: 40px;
+}
+
+.track-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.track-item {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-decoration: none;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
+}
+
+.track-item:hover {
+  transform: translateX(5px);
+  border-color: var(--accent-primary);
+}
+
+.track-number {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  min-width: 25px;
+  text-align: center;
+}
+
+.track-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.track-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.track-duration {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.releases-section {
+  margin-bottom: 40px;
+}
+
+.releases-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.release-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.release-support {
+  padding: 3px 10px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-width: 80px;
+  text-align: center;
+}
+
+.release-version {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.release-ean {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+.add-collection-btn {
+  border: none;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.add-collection-btn:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.add-collection-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.loading {
+  color: var(--text-primary);
+  text-align: center;
+  margin-top: 100px;
+  font-size: 1.2rem;
+}
+
+.success-message {
+  background: var(--success-bg);
+  color: var(--success-text);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .album-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .album-cover-large {
+    width: 150px;
+    height: 150px;
+  }
+
+  .album-actions button,
+  .modal-actions button {
+    width: 100%;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .release-row {
+    flex-wrap: wrap;
+  }
+
+  .add-collection-btn {
+    width: 100%;
+    margin-left: 0;
+  }
+}

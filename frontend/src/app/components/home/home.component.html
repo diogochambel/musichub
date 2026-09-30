@@ -1,0 +1,57 @@
+<div class="container">
+  <header class="hero">
+    @if (authService.isLoggedIn()) {
+      <p class="welcome-message">Welcome, {{ getWelcomeName() }}</p>
+    }
+    <p class="subtitle">Discover, Stream, and Enjoy Your Favorite Music</p>
+  </header>
+
+  <section class="featured-section">
+    <h2>Featured Music</h2>
+    <div class="music-grid">
+      @for (album of featuredAlbums; track album.id) {
+        <a [routerLink]="['/albums', album.id]" class="music-card">
+          @if (album.image_url) {
+            <img [src]="album.image_url" class="placeholder-image" alt="{{ album.title }} cover" />
+          } @else {
+            <div class="placeholder-image"></div>
+          }
+          <h3>{{ album.title }}</h3>
+          <p>{{ album.artist_name || 'Various Artists' }}</p>
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="artists-section">
+    <h2>Featured Artists</h2>
+    <div class="artists-grid">
+      @for (artist of featuredArtists; track artist.id) {
+        <a [routerLink]="['/artists', artist.id]" class="artist-card">
+          <div class="placeholder-avatar"></div>
+          <h3>{{ artist.name }}</h3>
+          <p>{{ artist.type }}</p>
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="releases-section">
+    <h2>Recent Releases</h2>
+    <div class="releases-list">
+      @for (album of recentReleases; track album.id) {
+        <a [routerLink]="['/albums', album.id]" class="release-item">
+          @if (album.image_url) {
+            <img [src]="album.image_url" class="release-cover" alt="{{ album.title }} cover" />
+          } @else {
+            <div class="release-cover"></div>
+          }
+          <div class="release-info">
+            <h3>{{ album.title }}</h3>
+            <p>{{ album.artist_name || 'Various Artists' }} &bull; {{ album.release_year }}</p>
+          </div>
+        </a>
+      }
+    </div>
+  </section>
+</div>

@@ -1,0 +1,32 @@
+<div class="container">
+  @if (artist) {
+    <div class="page-header">
+      <a [routerLink]="['/artists', artist.id]" class="back-link"
+        >&larr; Back to {{ artist.name }}</a
+      >
+      <h1>{{ artist.name }} &mdash; All Albums</h1>
+    </div>
+
+    @if (albums.length > 0) {
+      <div class="albums-list">
+        @for (album of albums; track album.id) {
+          <a [routerLink]="['/albums', album.id]" class="album-row">
+            @if (album.image_url) {
+              <img [src]="album.image_url" class="album-cover" alt="{{ album.title }} cover" />
+            } @else {
+              <div class="album-cover"></div>
+            }
+            <div class="album-info">
+              <h3>{{ album.title }}</h3>
+              <p>{{ album.release_year }} &bull; {{ album.type }}</p>
+            </div>
+          </a>
+        }
+      </div>
+    } @else {
+      <p class="no-albums">No albums found for this artist.</p>
+    }
+  } @else {
+    <p class="loading">Loading...</p>
+  }
+</div>

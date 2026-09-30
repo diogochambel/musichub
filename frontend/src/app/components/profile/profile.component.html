@@ -1,0 +1,189 @@
+<div class="profile-page" *ngIf="profile() as user; else loadingTpl">
+  <div class="profile-card">
+    <div class="profile-banner"></div>
+
+    <div class="profile-header">
+      <div class="profile-avatar">
+        <span>{{ user.username.charAt(0).toUpperCase() }}</span>
+      </div>
+
+      <div class="profile-main">
+        <h1 class="profile-username">{{ user.username }}</h1>
+        <p class="profile-email">{{ user.email }}</p>
+      </div>
+
+      <button class="manage-profile-btn" type="button" (click)="enableEdit()">
+        Manage profile
+      </button>
+    </div>
+
+    <div class="profile-content">
+      <section class="info-section">
+        <h2 class="section-title">Personal information</h2>
+
+        <div class="info-grid">
+          <div class="info-card">
+            <div>
+              <p class="info-label">Username</p>
+              <p class="info-value">{{ user.username }}</p>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div>
+              <p class="info-label">Email</p>
+              <p class="info-value">{{ user.email }}</p>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div>
+              <p class="info-label">Date of birth</p>
+              <p class="info-value">{{ user.birth_date | date: 'dd/MM/yyyy' }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAVORITE ARTIST -->
+      <section class="info-section" *ngIf="user.favorite_artist_id && favoriteArtistName()">
+        <h2 class="section-title">Favorite artist</h2>
+
+        <div class="info-grid">
+          <a
+            class="info-card favorite-card artist-link"
+            [routerLink]="['/artists', user.favorite_artist_id]"
+          >
+            <div>
+              <p class="info-value artist-name">{{ favoriteArtistName() }}</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <p class="success-message" *ngIf="successMessage()">
+        {{ successMessage() }}
+      </p>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-backdrop" *ngIf="editMode()">
+    <div class="profile-modal">
+      <div class="modal-header">
+        <h2>Manage profile</h2>
+        <button class="close-btn" type="button" (click)="cancelEdit()">×</button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="save()" class="modal-form">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" formControlName="username" />
+
+          <small
+            class="error"
+            *ngIf="form.controls.username.touched && form.controls.username.errors?.['required']"
+          >
+            Username is required.
+          </small>
+
+          <small
+            class="error"
+            *ngIf="
+              form.controls.username.touched && form.controls.username.errors?.['invalidUsername']
+            "
+          >
+            Username can only contain letters and numbers.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" formControlName="email" />
+
+          <small
+            class="error"
+            *ngIf="form.controls.email.touched && form.controls.email.errors?.['required']"
+          >
+            Email is required.
+          </small>
+
+          <small
+            class="error"
+            *ngIf="form.controls.email.touched && form.controls.email.errors?.['email']"
+          >
+            Enter a valid email.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label>Date of birth</label>
+          <input type="date" formControlName="birth_date" />
+
+          <small
+            class="error"
+            *ngIf="
+              form.controls.birth_date.touched && form.controls.birth_date.errors?.['required']
+            "
+          >
+            Date of birth is required.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label>Current password</label>
+          <input
+            type="password"
+            formControlName="current_password"
+            placeholder="Enter your current password"
+          />
+
+          <small
+            class="error"
+            *ngIf="
+              form.controls.current_password.touched &&
+              form.controls.current_password.errors?.['required']
+            "
+          >
+            Current password is required.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label>New password</label>
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="Leave blank to keep current password"
+          />
+
+          <small
+            class="error"
+            *ngIf="
+              form.controls.password.touched && form.controls.password.errors?.['weakPassword']
+            "
+          >
+            Password must have at least 8 characters, one uppercase letter, one lowercase letter and
+            one number.
+          </small>
+        </div>
+
+        <div class="modal-actions">
+          <button class="cancel-btn" type="button" (click)="cancelEdit()" [disabled]="saving()">
+            Cancel
+          </button>
+
+          <button class="save-btn" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Saving...' : 'Save changes' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="profile-page loading">
+    <p>Loading profile...</p>
+  </div>
+</ng-template>

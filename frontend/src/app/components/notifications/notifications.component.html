@@ -1,0 +1,50 @@
+<section class="notifications-page">
+  <div class="notifications-header">
+    <div>
+      <h1>Notifications</h1>
+      <p>Check the responses to your requests for new versions.</p>
+    </div>
+
+    @if (!loading() && notifications().length > 0) {
+      <button type="button" (click)="markAllRead()">Mark all as read</button>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="state-box">Loading notifications...</div>
+  } @else if (notifications().length === 0) {
+    <div class="state-box">You have no notifications.</div>
+  } @else {
+    <div class="notifications-list">
+      @for (notification of notifications(); track notification.id) {
+        <article
+          class="notification-card"
+          [class.unread]="!notification.read"
+          (click)="markAsRead(notification)"
+        >
+          <div class="notification-top">
+            @if (notification.response === 'aceite') {
+              <span class="badge accepted">Accepted</span>
+            } @else {
+              <span class="badge rejected">Rejected</span>
+            }
+
+            @if (!notification.read) {
+              <span class="unread-label">New</span>
+            }
+          </div>
+
+          <h2>{{ notification.album_title }}</h2>
+
+          <p>
+            Your request for a new version of this album was
+            <strong>{{ responseLabel(notification.response) }}</strong
+            >.
+          </p>
+
+          <small>{{ notification.created_at | date: 'short' }}</small>
+        </article>
+      }
+    </div>
+  }
+</section>

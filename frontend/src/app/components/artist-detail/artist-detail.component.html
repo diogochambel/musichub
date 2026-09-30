@@ -1,0 +1,92 @@
+<div class="container">
+  @if (artist) {
+    <div class="artist-header">
+      <div class="artist-avatar"></div>
+      <div class="artist-info">
+        <div class="artist-name-row">
+          <h1>{{ artist.name }}</h1>
+          <button
+            class="favorite-btn"
+            [class.active]="isFavorite"
+            [class.pop]="animating"
+            (animationend)="onAnimationDone()"
+            (click)="toggleFavorite()"
+            [title]="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              [attr.fill]="isFavorite ? '#FFD700' : 'none'"
+              [attr.stroke]="isFavorite ? '#FFD700' : 'currentColor'"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+              />
+            </svg>
+          </button>
+          @if (favoriteSuccessMessage) {
+            <span
+              class="favorite-message"
+              [class.added]="favoriteMessageType === 'added'"
+              [class.removed]="favoriteMessageType === 'removed'"
+            >
+              {{ favoriteSuccessMessage }}
+            </span>
+          }
+        </div>
+        <div class="artist-meta">
+          <span class="badge">{{ typeLabel(artist.type) }}</span>
+          <span class="meta-item"> <span class="label">ISNI</span> {{ artist.isni }} </span>
+          <span class="meta-item">
+            <span class="label">Active since</span> {{ artist.start_year }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    @if (artist.members && artist.members.length > 0) {
+      <section class="members-section">
+        <h2>Members</h2>
+        <div class="members-grid">
+          @for (member of artist.members; track member.id) {
+            <a [routerLink]="['/artists', member.id]" class="member-card">
+              <div class="member-avatar"></div>
+              <span>{{ member.name }}</span>
+            </a>
+          }
+        </div>
+      </section>
+    }
+
+    @if (artist.albums && artist.albums.length > 0) {
+      <section class="albums-section">
+        <h2>Albums</h2>
+        <div class="albums-grid">
+          @for (album of displayedAlbums; track album.id) {
+            <a [routerLink]="['/albums', album.id]" class="album-card">
+              @if (album.image_url) {
+                <img [src]="album.image_url" class="album-cover" alt="{{ album.title }} cover" />
+              } @else {
+                <div class="album-cover"></div>
+              }
+              <h3>{{ album.title }}</h3>
+              <p>{{ album.release_year }} &bull; {{ album.type }}</p>
+            </a>
+          }
+        </div>
+        @if (hasMoreAlbums) {
+          <a [routerLink]="['/artists', artist.id, 'albums']" class="see-all-link"
+            >See all albums</a
+          >
+        }
+      </section>
+    }
+  } @else {
+    <p class="loading">Loading artist...</p>
+  }
+</div>

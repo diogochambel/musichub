@@ -1,0 +1,63 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: psi-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - psi-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: psi-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017
+      - DB_NAME=psi_db
+      - SERVER_PORT=8080
+      - FRONTEND_URL=http://localhost:4200
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - psi-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: psi-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:4200"
+    environment:
+      - API_URL=http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - psi-network
+
+networks:
+  psi-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
